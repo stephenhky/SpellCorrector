@@ -1,5 +1,8 @@
 package home.kwyho.spellcheck.test
 
+import home.kwyho.spellcheck.SpellCorrector
+import java.io.File
+
 /**
  * Created by hok1 on 6/16/14.
  */
@@ -19,5 +22,6 @@ object SpellCorrectionTester {
       }
       spelling = readLine("spelling> ")
     }
+    println("Testing quit.")
   }
 }
