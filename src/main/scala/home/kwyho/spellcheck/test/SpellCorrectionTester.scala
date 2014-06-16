@@ -1,13 +1,8 @@
-package home.kwyho.spellcheck.home.kwyho.spellcheck.test
+package home.kwyho.spellcheck.test
 
 /**
  * Created by hok1 on 6/16/14.
  */
-
-import home.kwyho.spellcheck.SpellCorrector
-import java.io.File
-import java.lang.UnsupportedOperationException
-
 object SpellCorrectionTester {
   def main(args : Array[String]) = {
     println("Initializing spell-check engine...")
