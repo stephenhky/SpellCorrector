@@ -42,7 +42,7 @@ class SpellCorrector {
   }
 
   def getEditTwoSpellings(word: String) : Set[String] =
-    getEditOneSpellings(word).map(getEditOneSpellings).filter( set => (set.size>0)).reduceRight( (set1, set2) => set1 | set2)
+    getEditOneSpellings(word).map(getEditOneSpellings).reduceRight( (set1, set2) => set1 | set2)
 
   def correct(wrongSpelling: String) : String = getEditTwoSpellings(wrongSpelling).maxBy( s => wordCounts(s))
 
