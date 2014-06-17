@@ -4,6 +4,10 @@
 
 package home.kwyho.spellcheck
 
+/*
+  Reference: http://norvig.com/spell-correct.html
+ */
+
 import java.io.File
 import scala.io.Source
 import scala.collection.mutable.Map
@@ -30,11 +34,11 @@ class SpellCorrector {
 
   def getEditOneSpellings(word: String) : Set[String] = {
     val splits = getSplittedCombinations(word)
-    val deletes = splits.map( s => if (s._2.length>1) {s._1+s._2.substring(1)} else {s._1})
+    val deletes = splits.map( s => if (s._2.length>0) {s._1+s._2.substring(1)} else {s._1})
     val transposes = splits.map( s => if (s._2.length>1) {
       s._1+s._2.charAt(1)+s._2.charAt(0)+s._2.substring(2)
     } else {s._1})
-    val replaces = splits.map( s => alphabets.map(c => if (s._2.length>1) {
+    val replaces = splits.map( s => alphabets.map(c => if (s._2.length>0) {
       s._1+c+s._2.substring(1)
     } else {s._1})).reduceRight( (set1, set2) => set1 | set2)
     val inserts = splits.map( s => alphabets.map(c => s._1+c+s._2)).reduceRight( (set1, set2) => set1 | set2)
@@ -44,6 +48,13 @@ class SpellCorrector {
   def getEditTwoSpellings(word: String) : Set[String] =
     getEditOneSpellings(word).map(getEditOneSpellings).reduceRight( (set1, set2) => set1 | set2)
 
-  def correct(wrongSpelling: String) : String = getEditTwoSpellings(wrongSpelling).maxBy( s => wordCounts(s))
+  def correct(wrongSpelling: String) : String = {
+    val edit0words = Set(wrongSpelling) intersect wordCounts.keySet
+    if (edit0words.size>0) return edit0words.maxBy( s => wordCounts(s))
+    val edit1words = getEditOneSpellings(wrongSpelling)
+    if (edit1words.size>0) return edit1words.maxBy( s => wordCounts(s))
+    val edit2words = getEditTwoSpellings(wrongSpelling)
+    edit2words.maxBy( s => wordCounts(s))
+  }
 
 }
