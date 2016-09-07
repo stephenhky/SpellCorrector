@@ -134,3 +134,7 @@ local.properties
 
 big.txt
 projectFilesBackup/
+
+
+.idea/
+project/project/
