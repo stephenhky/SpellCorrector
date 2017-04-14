@@ -34,13 +34,9 @@ class SpellCorrector {
 
   def getEditOneSpellings(word: String) : Set[String] = {
     val splits = getSplittedCombinations(word)
-    val deletes = splits.map( s => if (s._2.length>0) {s._1+s._2.substring(1)} else {s._1})
-    val transposes = splits.map( s => if (s._2.length>1) {
-      s._1+s._2.charAt(1)+s._2.charAt(0)+s._2.substring(2)
-    } else {s._1})
-    val replaces = splits.map( s => alphabets.map(c => if (s._2.length>0) {
-      s._1+c+s._2.substring(1)
-    } else {s._1})).reduceRight( (set1, set2) => set1 | set2)
+    val deletes = splits.filter(s => s._2.length>0).map( s => s._1+s._2.substring(1))
+    val transposes = splits.filter(s => s._2.length>1).map( s => s._1+s._2.charAt(1)+s._2.charAt(0)+s._2.substring(2))
+    val replaces = splits.filter(s => s._2.length>0).map( s => alphabets.map(c => s._1+c+s._2.substring(1)).filter(s => !s.equals(word))).reduceRight( (set1, set2) => set1 | set2)
     val inserts = splits.map( s => alphabets.map(c => s._1+c+s._2)).reduceRight( (set1, set2) => set1 | set2)
     (deletes | transposes | replaces | inserts).intersect(wordCounts.keySet)
   }
